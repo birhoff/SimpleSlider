@@ -10,21 +10,47 @@
     <title></title>
 </head>
 <body>
-<div id="slider1" style="width: 900px; height: 500px;">
-    <ul>
-        <li><img src="images/slide01.jpg"></li>
-        <li><img src="images/Laxus_trying_to_force_him_to_resign_from_the_position_of_Master.jpg"></li>
-        <li><img src="images/Loke_is_slapped_by_Lucy.jpg"></li>
-        <li><img src="images/Mira_take_care_of_Wendy.jpg"></li>
-        <li><img src="images/tumblr_static_tumblr_mb4uex7djl1rqw4hlo2_1280.png"></li>
-    </ul>
+<div class="container">
+    <h2> All in one </h2>
+
+    <div id="slider1">
+        <ul>
+            <li><img src="images/slider1/ammmm10.jpg"></li>
+            <li><img src="images/slider1/anime_girl_by_opera2-d61vdb2.png"></li>
+            <li><img src="images/slider1/featured-image-theme-songs.jpg"></li>
+            <li><img src="images/slider1/girloncomp.png"></li>
+            <li><img src="images/slider1/tumblr_mbl0fw7bLn1rhol2ho1_1280.png"></li>
+        </ul>
+    </div>
+
+    <div style="margin-bottom: 130px;"></div>
+
+    <h2> Empty </h2>
+
+    <div id="slider2">
+        <ul>
+            <li><img src="images/slider2/5.jpg"></li>
+            <li><img src="images/slider2/18-1349-yoga-retreat.jpg"></li>
+            <li><img src="images/slider2/coconut_palms_at_sunset_saipan_northern_mariana_islands-700x300.jpg"></li>
+            <li><img src="images/slider2/sunset3.jpg"></li>
+            <li><img src="images/slider2/sunset_banner.jpg"></li>
+        </ul>
+    </div>
+
 </div>
 <script>
-    jQuery(document).ready(function($) {
+    jQuery(document).ready(function ($) {
 
         $('#slider1').SimpleSlider({
-            height      : 500,
-            width       : 900
+            height: 300,
+            width: 700
+        });
+
+        $('#slider2').SimpleSlider({
+            height: 300,
+            width: 700,
+            navigation: false,
+            pagination: false
         });
 
     });

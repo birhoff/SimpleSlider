@@ -26,6 +26,8 @@
 
         var init = function () {
 
+            $wrapper.addClass("SimpleSlider-slider");
+
             $slides.css({
                 'height': settings.height,
                 'width': settings.width
@@ -120,17 +122,30 @@
         };
 
         var initNavigation = function () {
-            var $next = $("<a href='#' class='nav next'>></a>");
+
+            var $next = $("<a href='#' class='nav next'></a>");
             $next.on('click', function () {
                 slide('fwd', false);
             })
             $next.appendTo($wrapper);
 
-            var $prev = $("<a href='#' class='nav prev'><</a>");
+            var $prev = $("<a href='#' class='nav prev'></a>");
             $prev.on('click', function () {
                 slide('back', false);
             })
             $prev.appendTo($wrapper);
+
+            var middle = ($wrapper.outerHeight() - $next.outerHeight()) / 2;
+            $next.css('top', middle);
+            $prev.css('top', middle);
+
+            if (settings.navigationOnHover) {
+                $next.addClass("hover-opacity");
+                $prev.addClass("hover-opacity");
+            }
+
+            $next.show();
+            $prev.show();
         }
 
         var initPagination = function () {
@@ -162,8 +177,10 @@
 
             });
 
-            $pagination.appendTo($wrapper);
             $paginationItems = $pagination.children();
+            $pagination.appendTo($wrapper);
+            var paginationItemWidth = $paginationItems.outerWidth(true);
+            $pagination.css('width', paginationItemWidth * $paginationItems.length);
         }
 
         var slide = function (direction, position) {
@@ -269,6 +286,7 @@
         navigation: true, // enable/disable next + previous UI elements
         pagination: true, // enable/disable pagination
 
-        hoverPause: true     // enable/disable pause slides on hover
+        hoverPause: true,     // enable/disable pause slides on hover
+        navigationOnHover: true // enable/disable navigation arrows on slider hover
     }
 })(jQuery);
