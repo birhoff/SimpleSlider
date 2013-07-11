@@ -11,9 +11,7 @@
         var $slider = $wrapper.find('ul');
         var $slides = $slider.children('li');
 
-        var $clone_first = null;
-        var $clone_last = null;
-        var $container = null;
+        var $paginationItems = null;
 
         var state = {
             count: $slides.length,
@@ -58,14 +56,17 @@
                 });
             }
 
-            initSliding();
-
             if (settings.navigation) {
                 initNavigation();
             }
 
             state.currentindex = 1;
-            state.currentslide = 2;
+
+            if (settings.pagination) {
+                initPagination();
+            }
+
+            initSliding();
 
             $slider.show();
             $slides.eq(state.currentindex).show();
@@ -81,16 +82,16 @@
 
         var initSliding = function () {
 
-            $clone_first = $slides.eq(0).clone();
-            $clone_last = $slides.eq(state.count - 1).clone();
+            var cloneFirst = $slides.eq(0).clone();
+            var cloneLast = $slides.eq(state.count - 1).clone();
 
-            $clone_first.attr({'data-clone': 'last', 'data-slide': 0}).appendTo($slider).show();
-            $clone_last.attr({'data-clone': 'first', 'data-slide': 0}).prependTo($slider).show();
+            cloneFirst.attr({'data-clone': 'last', 'data-slide': 0}).appendTo($slider).show();
+            cloneLast.attr({'data-clone': 'first', 'data-slide': 0}).prependTo($slider).show();
 
             $slides = $slider.children('li');
             state.count = $slides.length;
 
-            $container = $('<div class="simpleSlider-wrapper"></div>');
+            var $container = $('<div class="SimpleSlider-wrapper"></div>');
 
 
             $container.css({
@@ -123,23 +124,46 @@
             $next.on('click', function () {
                 slide('fwd', false);
             })
-            $next.appendTo($container);
+            $next.appendTo($wrapper);
+
             var $prev = $("<a href='#' class='nav prev'><</a>");
             $prev.on('click', function () {
                 slide('back', false);
             })
-            $prev.appendTo($container);
+            $prev.appendTo($wrapper);
         }
 
-        var readOptions = function (wrapper, options) {
+        var initPagination = function () {
 
-            if (!options.width) {
-                options.width = wrapper.css('width');
-            }
+            var $pagination = $('<div class="SimpleSlider-pagination"></div>');
 
-            if (!options.height) {
-                options.height = wrapper.css('height');
-            }
+            $.each($slides, function (key) {
+
+                var slideIndex = key + 1;
+                var destinationSlide = key + 2;
+
+
+                var paginationItem = $("<a href='#' class='SimpleSlider-pagination-item'></a>");
+
+                if (slideIndex === state.currentSlide) {
+                    paginationItem.addClass('active');
+                }
+
+                paginationItem.on('click', function (e) {
+                    e.preventDefault();
+
+                    if (!state.animating && state.currentSlide !== destinationSlide) {
+                        slide(false, destinationSlide);
+                    }
+                });
+
+                // add the marker to the wrapper
+                paginationItem.appendTo($pagination);
+
+            });
+
+            $pagination.appendTo($wrapper);
+            $paginationItems = $pagination.children();
         }
 
         var slide = function (direction, position) {
@@ -156,27 +180,40 @@
                 setNextSlide(direction);
             }
 
-            state.slidewidth = settings.width;
+            if (settings.pagination) {
 
-            $slider.animate({'left': -state.nextindex * state.slidewidth }, settings.animationDuration, function () {
+                var itemIndex = state.nextindex - 1;
 
-                state.currentslide = state.nextslide;
+                if (itemIndex === state.count - 2) {
+                    itemIndex = 0;
+                }
+                else if (itemIndex === -1) {
+                    itemIndex = state.count - 3;
+                }
+
+                $paginationItems.removeClass('active');
+                $paginationItems.eq(itemIndex).addClass('active');
+            }
+
+            $slider.animate({'left': -state.nextindex * settings.width }, settings.animationDuration, function () {
+
+                state.currentSlide = state.nextslide;
                 state.currentindex = state.nextindex;
 
                 // is the current slide a clone?
                 if ($slides.eq(state.currentindex).attr('data-clone') === 'last') {
 
                     // affirmative, at the last slide (clone of first)
-                    $slider.css({'left': -state.slidewidth });
-                    state.currentslide = 2;
+                    $slider.css({'left': -settings.width });
+                    state.currentSlide = 2;
                     state.currentindex = 1;
 
                 }
                 else if ($slides.eq(state.currentindex).attr('data-clone') === 'first') {
 
                     // affirmative, at the fist slide (clone of last)
-                    $slider.css({'left': -state.slidewidth * (state.count - 2)});
-                    state.currentslide = state.count - 1;
+                    $slider.css({'left': -settings.width * (state.count - 2)});
+                    state.currentSlide = state.count - 1;
                     state.currentindex = state.count - 2;
 
                 }
@@ -192,7 +229,7 @@
 
                 if ($slides.eq(state.currentindex).next().length) {
                     state.nextindex = state.currentindex + 1;
-                    state.nextslide = state.currentslide + 1;
+                    state.nextslide = state.currentSlide + 1;
                 }
                 else {
                     state.nextindex = 0;
@@ -204,7 +241,7 @@
 
                 if ($slides.eq(state.currentindex).prev().length) {
                     state.nextindex = state.currentindex - 1;
-                    state.nextslide = state.currentslide - 1;
+                    state.nextslide = state.currentSlide - 1;
                 }
                 else {
                     state.nextindex = state.count - 1;
@@ -225,11 +262,12 @@
         width: 900,
         height: 500,
 
-        animationDuration: 450,      // length of transition
-        animationDelay: 4000,     // delay between transitions
-        auto: true,     // enable/disable auto slide rotation
+        animationDuration: 450, // length of transition
+        animationDelay: 4000, // delay between transitions
+        auto: true, // enable/disable auto slide rotation
 
-        navigation: true,     // enable/disable next + previous UI elements
+        navigation: true, // enable/disable next + previous UI elements
+        pagination: true, // enable/disable pagination
 
         hoverPause: true     // enable/disable pause slides on hover
     }
