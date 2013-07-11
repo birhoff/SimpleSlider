@@ -2,12 +2,15 @@
 <html>
 <head>
     <script type="text/javascript" src="scripts/jquery-2.0.3.min.js"></script>
-    <script type="text/javascript" src="SimpleSlider/SimpleSlider.js"></script>
     <link rel="stylesheet" href="style.css" type='text/css'/>
+
+    <script type="text/javascript" src="SimpleSlider/SimpleSlider.js"></script>
+    <link rel="stylesheet" href="SimpleSlider/SimpleSlider.css" type='text/css'/>
+
     <title></title>
 </head>
 <body>
-<div style="width: 900px; height: 500px;">
+<div id="slider1" style="width: 900px; height: 500px;">
     <ul>
         <li><img src="images/slide01.jpg"></li>
         <li><img src="images/Laxus_trying_to_force_him_to_resign_from_the_position_of_Master.jpg"></li>
@@ -16,5 +19,15 @@
         <li><img src="images/tumblr_static_tumblr_mb4uex7djl1rqw4hlo2_1280.png"></li>
     </ul>
 </div>
+<script>
+    jQuery(document).ready(function($) {
+
+        $('#slider1').SimpleSlider({
+            height      : 500,
+            width       : 900
+        });
+
+    });
+</script>
 </body>
 </html>
