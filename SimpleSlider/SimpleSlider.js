@@ -42,7 +42,7 @@
                 'position': 'relative'
             });
 
-            if (settings.hoverpause && settings.automatic) {
+            if (settings.hoverPause && settings.auto) {
                 $wrapper.hover(function () {
                     if (!state.paused) {
                         clearInterval(state.interval);
@@ -52,7 +52,7 @@
                     if (state.paused) {
                         state.interval = setInterval(function () {
                             slide("fwd", false);
-                        }, settings.animdelay);
+                        }, settings.animationDelay);
                         state.paused = false;
                     }
                 });
@@ -60,17 +60,21 @@
 
             initSliding();
 
+            if (settings.navigation) {
+                initNavigation();
+            }
+
             state.currentindex = 1;
             state.currentslide = 2;
 
             $slider.show();
             $slides.eq(state.currentindex).show();
 
-            // Finally, if automatic is set to true, kick off the interval
-            if (settings.automatic) {
+            // Finally, if auto is set to true, kick off the interval
+            if (settings.auto) {
                 state.interval = setInterval(function () {
                     slide("fwd", false);
-                }, settings.animdelay);
+                }, settings.animationDelay);
             }
 
         }
@@ -114,6 +118,19 @@
 
         };
 
+        var initNavigation = function () {
+            var $next = $("<a href='#' class='nav next'>></a>");
+            $next.on('click', function () {
+                slide('fwd', false);
+            })
+            $next.appendTo($container);
+            var $prev = $("<a href='#' class='nav prev'><</a>");
+            $prev.on('click', function () {
+                slide('back', false);
+            })
+            $prev.appendTo($container);
+        }
+
         var readOptions = function (wrapper, options) {
 
             if (!options.width) {
@@ -141,7 +158,7 @@
 
             state.slidewidth = settings.width;
 
-            $slider.animate({'left': -state.nextindex * state.slidewidth }, settings.animduration, function () {
+            $slider.animate({'left': -state.nextindex * state.slidewidth }, settings.animationDuration, function () {
 
                 state.currentslide = state.nextslide;
                 state.currentindex = state.nextindex;
@@ -204,23 +221,16 @@
     };
 
     $.fn.SimpleSlider.defaults = {
-        // w + h
+
         width: 900,
         height: 500,
 
-        // transition values
-        animduration: 450,      // length of transition
-        animdelay: 4000,     // delay between transitions
-        automatic: true,     // enable/disable automatic slide rotation
+        animationDuration: 450,      // length of transition
+        animationDelay: 4000,     // delay between transitions
+        auto: true,     // enable/disable auto slide rotation
 
-        // control and marker configuration
-        shownavs: true,     // enable/disable next + previous UI elements
+        navigation: true,     // enable/disable next + previous UI elements
 
-        // interaction values
-        hoverpause: true,     // enable/disable pause slides on hover
-
-        // presentational options
-        usecaptions: true,     // enable/disable captions using img title attribute
-        randomstart: false     // start from a random slide
+        hoverPause: true     // enable/disable pause slides on hover
     }
 })(jQuery);
