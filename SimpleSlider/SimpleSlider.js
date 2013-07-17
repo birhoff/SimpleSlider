@@ -11,6 +11,8 @@
         var $slider = $wrapper.find('ul');
         var $slides = $slider.children('li');
 
+        var $container = $('<div class="simple-slider__animation-container"></div>');
+
         var $paginationItems = null;
 
         var state = {
@@ -26,7 +28,7 @@
 
         var init = function () {
 
-            $wrapper.addClass("SimpleSlider-slider");
+            $wrapper.addClass("simple-slider__wrapper");
 
             $slides.css({
                 'height': settings.height,
@@ -93,64 +95,50 @@
             $slides = $slider.children('li');
             state.count = $slides.length;
 
-            var $container = $('<div class="SimpleSlider-wrapper"></div>');
-
 
             $container.css({
                 'width': settings.width,
-                'height': settings.height,
-                'overflow': 'hidden',
-                'position': 'relative'
+                'height': settings.height
             });
 
-            $slider.addClass("SimpleSlider");
+            $slider.addClass("simple-slider__slides__container");
 
             $slider.css({
                 'width': settings.width * (state.count + 2),
                 'left': -settings.width * state.currentSlide
             });
 
-            $slides.css({
-                'float': 'left',
-                'position': 'relative',
-                'display': 'list-item'
-            });
+            $slides.addClass('simple-slider__slides__slide');
 
             $container.prependTo($wrapper);
             $slider.appendTo($container);
-
         };
 
         var initNavigation = function () {
 
-            var $next = $("<a href='#' class='nav next'></a>");
-            $next.on('click', function () {
-                slide('fwd', false);
-            })
-            $next.appendTo($wrapper);
+            $wrapper.append("<a href='#' class='simple-slider__navigation next' data-direction='fwd'></a>");
+            $wrapper.append("<a href='#' class='simple-slider__navigation prev' data-direction='back'></a>");
 
-            var $prev = $("<a href='#' class='nav prev'></a>");
-            $prev.on('click', function () {
-                slide('back', false);
-            })
-            $prev.appendTo($wrapper);
+            var $navigation = $(".simple-slider__navigation");
 
-            var middle = ($wrapper.outerHeight() - $next.outerHeight()) / 2;
-            $next.css('top', middle);
-            $prev.css('top', middle);
+            $navigation.on('click', function (event) {
+                var direction = $(event.target).attr('data-direction');
+                slide(direction, false);
+            });
+
+            var middlePosition = ($wrapper.outerHeight() - $navigation.outerHeight()) / 2;
+            $navigation.css('top', middlePosition);
 
             if (settings.navigationOnHover) {
-                $next.addClass("hover-opacity");
-                $prev.addClass("hover-opacity");
+                $navigation.addClass('hover-navigation');
             }
 
-            $next.show();
-            $prev.show();
+            $navigation.show();
         }
 
         var initPagination = function () {
 
-            var $pagination = $('<div class="SimpleSlider-pagination"></div>');
+            var $pagination = $('<div class="simple-slider__pagination"></div>');
 
             $.each($slides, function (key) {
 
@@ -158,7 +146,7 @@
                 var destinationSlide = key + 2;
 
 
-                var paginationItem = $("<a href='#' class='SimpleSlider-pagination-item'></a>");
+                var paginationItem = $("<a href='#' class='simple-slider__pagination__item'></a>");
 
                 if (slideIndex === state.currentSlide) {
                     paginationItem.addClass('active');
