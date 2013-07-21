@@ -116,10 +116,10 @@
 
         var initNavigation = function () {
 
-            $wrapper.append("<a href='#' class='simple-slider__navigation next' data-direction='fwd'></a>");
-            $wrapper.append("<a href='#' class='simple-slider__navigation prev' data-direction='back'></a>");
+            var $navigation = $("<a href='#' class='simple-slider__navigation next' data-direction='fwd'></a> \
+                                 <a href='#' class='simple-slider__navigation prev' data-direction='back'></a>");
 
-            var $navigation = $(".simple-slider__navigation");
+            $wrapper.append($navigation);
 
             $navigation.on('click', function (event) {
                 var direction = $(event.target).attr('data-direction');
